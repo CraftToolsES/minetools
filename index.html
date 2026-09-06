@@ -1,0 +1,1461 @@
+Aquí tienes el código completo, listo para copiar y pegar en GitHub:
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MineTools — Herramientas y guías gratuitas para Minecraft</title>
+  <meta name="description" content="Calculadoras, herramientas y guías gratuitas para mejorar tu experiencia en Minecraft. Java y Bedrock.">
+
+  <!-- Tipografías: Space Grotesk para títulos, Inter para texto -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+/* ==========================================================================
+   MINETOOLS — HOJA DE ESTILOS
+   Paleta oscura + verde, inspirada en el mundo de los bloques,
+   sin usar ningún activo oficial de Minecraft.
+   ========================================================================== */
+
+/* ---------- Tokens de diseño ---------- */
+:root {
+  /* Fondos */
+  --bg-void: #0a100c;
+  --bg-surface: #121b15;
+  --bg-surface-alt: #17221b;
+  --bg-elevated: #1c2921;
+
+  /* Bordes */
+  --border: #263a2d;
+  --border-light: #35503f;
+
+  /* Verdes (marca) */
+  --green-300: #7fe3a0;
+  --green-400: #5cd98a;
+  --green-500: #3cbd6e;
+  --green-600: #2a9a58;
+  --green-900: #163823;
+
+  /* Acento dorado (uso puntual) */
+  --gold-400: #e9c25c;
+  --gold-600: #b8912f;
+
+  /* Texto */
+  --text-high: #eaf2ec;
+  --text-mid: #a9bfb0;
+  --text-low: #6d8578;
+
+  /* Tipografía */
+  --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+  --font-body: 'Inter', 'Segoe UI', sans-serif;
+
+  /* Otros */
+  --radius-sm: 4px;
+  --notch: 14px; /* tamaño de la esquina cortada estilo "bloque" */
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --transition: 180ms ease;
+}
+
+/* ---------- Reset básico ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-void);
+  color: var(--text-high);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(60, 189, 110, 0.08), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(233, 194, 92, 0.05), transparent 40%);
+  background-attachment: fixed;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--green-400);
+  outline-offset: 3px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---------- Botones ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 26px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid transparent;
+  clip-path: polygon(
+    var(--notch) 0, 100% 0, 100% calc(100% - var(--notch)),
+    calc(100% - var(--notch)) 100%, 0 100%, 0 var(--notch)
+  );
+  transition: transform var(--transition), background-color var(--transition), border-color var(--transition), color var(--transition);
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background-color: var(--green-500);
+  color: #0a1510;
+}
+
+.btn-primary:hover {
+  background-color: var(--green-400);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background-color: transparent;
+  border-color: var(--border-light);
+  color: var(--text-high);
+}
+
+.btn-ghost:hover {
+  border-color: var(--green-400);
+  color: var(--green-300);
+}
+
+.btn-secondary {
+  width: 100%;
+  background-color: var(--bg-elevated);
+  border-color: var(--border-light);
+  color: var(--text-high);
+}
+
+.btn-secondary:hover {
+  background-color: var(--green-600);
+  border-color: var(--green-600);
+  color: #0a1510;
+}
+
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   CABECERA
+   ========================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: rgba(10, 16, 12, 0.75);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--text-high);
+}
+
+.logo-mark {
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(160deg, var(--green-400), var(--green-600));
+  clip-path: polygon(30% 0, 100% 0, 100% 70%, 70% 100%, 0 100%, 0 30%);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav a {
+  font-size: 0.95rem;
+  color: var(--text-mid);
+  font-weight: 500;
+  position: relative;
+  padding: 4px 0;
+  transition: color var(--transition);
+}
+
+.nav a:hover {
+  color: var(--text-high);
+}
+
+.nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background-color: var(--green-400);
+  transition: width var(--transition);
+}
+
+.nav a:hover::after {
+  width: 100%;
+}
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 6px;
+}
+
+.nav-toggle span {
+  width: 22px;
+  height: 2px;
+  background-color: var(--text-high);
+  transition: transform var(--transition), opacity var(--transition);
+}
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.hero {
+  padding: 88px 0 96px;
+  overflow: hidden;
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 48px;
+}
+
+.eyebrow {
+  color: var(--green-400);
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+}
+
+.hero-text h1 {
+  font-size: clamp(2.3rem, 4.2vw, 3.4rem);
+  margin-bottom: 20px;
+  max-width: 15ch;
+}
+
+.hero-lead {
+  font-size: 1.1rem;
+  color: var(--text-mid);
+  max-width: 46ch;
+  margin-bottom: 34px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* --- Cluster de cubos isométricos (CSS puro, sin imágenes) --- */
+.hero-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 340px;
+}
+
+.cube-cluster {
+  position: relative;
+  width: 260px;
+  height: 260px;
+}
+
+.cube {
+  position: absolute;
+  width: 130px;
+  height: 150.15px; /* 130 * sqrt(4/3) */
+  animation: float 5s ease-in-out infinite;
+}
+
+.cube--back {
+  top: 0;
+  left: 55px;
+  width: 100px;
+  height: 115.5px;
+  opacity: 0.55;
+  animation-delay: -1.2s;
+}
+
+.cube--gold {
+  top: 60px;
+  left: 0;
+  width: 90px;
+  height: 104px;
+  animation-delay: -2.6s;
+}
+
+.cube--front {
+  bottom: 0;
+  right: 10px;
+  animation-delay: 0s;
+}
+
+.face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.top   { clip-path: polygon(50% 0%, 100% 25%, 50% 50%, 0% 25%); }
+.left  { clip-path: polygon(0% 25%, 50% 50%, 50% 100%, 0% 75%); }
+.right { clip-path: polygon(50% 50%, 100% 25%, 100% 75%, 50% 100%); }
+
+.cube--front .top   { background-color: var(--green-400); }
+.cube--front .left  { background-color: var(--green-600); }
+.cube--front .right { background-color: var(--green-900); }
+
+.cube--back .top   { background-color: #2f4739; }
+.cube--back .left  { background-color: #223529; }
+.cube--back .right { background-color: #182720; }
+
+.cube--gold .top   { background-color: var(--gold-400); }
+.cube--gold .left  { background-color: var(--gold-600); }
+.cube--gold .right { background-color: #7c5f1f; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cube { animation: none; }
+}
+
+/* ==========================================================================
+   SECCIONES GENERALES
+   ========================================================================== */
+.section {
+  padding: 96px 0;
+}
+
+.section--alt {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.section-head {
+  max-width: 560px;
+  margin-bottom: 48px;
+}
+
+.section-head h2 {
+  font-size: clamp(1.8rem, 3vw, 2.3rem);
+  margin-bottom: 12px;
+}
+
+.section-head p {
+  color: var(--text-mid);
+  font-size: 1.05rem;
+}
+
+/* ==========================================================================
+   TARJETAS DE HERRAMIENTAS
+   ========================================================================== */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background-color: var(--bg-surface-alt);
+  border: 1px solid var(--border);
+  padding: 30px 26px 26px;
+  clip-path: polygon(
+    24px 0, 100% 0, 100% calc(100% - 24px),
+    calc(100% - 24px) 100%, 0 100%, 0 24px
+  );
+  transition: border-color var(--transition), transform var(--transition), background-color var(--transition);
+}
+
+.tool-card:hover {
+  border-color: var(--green-500);
+  transform: translateY(-4px);
+  background-color: var(--bg-elevated);
+}
+
+.tool-icon {
+  font-size: 1.8rem;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--green-900);
+  margin-bottom: 20px;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.tool-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 8px;
+}
+
+.tool-card p {
+  color: var(--text-mid);
+  font-size: 0.95rem;
+  margin-bottom: 22px;
+  min-height: 44px;
+}
+
+.tool-card--soon {
+  opacity: 0.75;
+}
+
+/* ==========================================================================
+   GUÍAS (acordeón)
+   ========================================================================== */
+.guides-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 760px;
+}
+
+.guide-item {
+  background-color: var(--bg-surface-alt);
+  border: 1px solid var(--border);
+  clip-path: polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px);
+  transition: border-color var(--transition);
+}
+
+.guide-item[open] {
+  border-color: var(--green-500);
+}
+
+.guide-item summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-weight: 600;
+}
+
+.guide-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.guide-icon {
+  font-size: 1.3rem;
+}
+
+.guide-title {
+  flex: 1;
+  font-size: 1.02rem;
+}
+
+.guide-chevron {
+  color: var(--green-400);
+  font-size: 1.2rem;
+  transition: transform var(--transition);
+}
+
+.guide-item[open] .guide-chevron {
+  transform: rotate(45deg);
+}
+
+.guide-body {
+  padding: 0 24px 24px 62px;
+  color: var(--text-mid);
+  font-size: 0.98rem;
+  max-width: 62ch;
+}
+
+/* ==========================================================================
+   VENTAJAS
+   ========================================================================== */
+.advantages-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.advantage-card {
+  padding: 28px 22px;
+  border: 1px solid var(--border);
+  background-color: var(--bg-surface-alt);
+}
+
+.advantage-icon {
+  font-size: 1.6rem;
+  margin-bottom: 16px;
+}
+
+.advantage-card h3 {
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+}
+
+.advantage-card p {
+  color: var(--text-mid);
+  font-size: 0.92rem;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.site-footer {
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  padding: 56px 0 32px;
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 40px;
+}
+
+.footer-brand p {
+  color: var(--text-mid);
+  margin-top: 12px;
+  max-width: 34ch;
+  font-size: 0.92rem;
+}
+
+.footer-nav {
+  display: flex;
+  gap: 24px;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.footer-nav a {
+  color: var(--text-mid);
+  font-size: 0.92rem;
+  transition: color var(--transition);
+}
+
+.footer-nav a:hover {
+  color: var(--green-400);
+}
+
+.footer-disclaimer {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+  color: var(--text-low);
+  font-size: 0.82rem;
+  max-width: 90ch;
+}
+
+.footer-copy {
+  grid-column: 1 / -1;
+  color: var(--text-low);
+  font-size: 0.8rem;
+}
+
+/* ==========================================================================
+   MODAL DE HERRAMIENTAS
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(5, 9, 6, 0.7);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+  z-index: 100;
+}
+
+.modal-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal {
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-light);
+  width: 100%;
+  max-width: 460px;
+  max-height: 86vh;
+  overflow-y: auto;
+  padding: 36px 32px 32px;
+  position: relative;
+  clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+  transform: translateY(12px);
+  transition: transform var(--transition);
+}
+
+.modal-overlay.is-open .modal {
+  transform: translateY(0);
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  font-size: 1.1rem;
+  color: var(--text-mid);
+  transition: color var(--transition);
+}
+
+.modal-close:hover {
+  color: var(--text-high);
+}
+
+.modal h3 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+/* Formularios dentro del modal */
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--text-mid);
+  margin-bottom: 6px;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  color: var(--text-high);
+  padding: 11px 14px;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--green-400);
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.tool-result {
+  margin-top: 20px;
+  padding: 16px 18px;
+  background-color: var(--green-900);
+  border: 1px solid var(--green-600);
+  font-size: 0.95rem;
+  color: var(--text-high);
+  display: none;
+}
+
+.tool-result.is-visible {
+  display: block;
+}
+
+.tool-result strong {
+  color: var(--green-300);
+}
+
+.tool-result code {
+  display: block;
+  margin-top: 8px;
+  padding: 10px 12px;
+  background-color: var(--bg-void);
+  color: var(--green-300);
+  font-size: 0.88rem;
+  word-break: break-all;
+}
+
+.tool-hint {
+  color: var(--text-low);
+  font-size: 0.82rem;
+  margin-top: 14px;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 900px) {
+  .tools-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .advantages-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-visual {
+    order: -1;
+    height: 220px;
+  }
+}
+
+@media (max-width: 720px) {
+  .nav {
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition);
+  }
+
+  .nav.is-open {
+    max-height: 260px;
+  }
+
+  .nav a {
+    width: 100%;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-nav {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .advantages-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .guide-body {
+    padding-left: 24px;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- ============ CABECERA / NAVEGACIÓN ============ -->
+  <header class="site-header" id="header">
+    <div class="container header-inner">
+      <a href="#inicio" class="logo">
+        <span class="logo-mark" aria-hidden="true"></span>
+        MineTools
+      </a>
+
+      <nav class="nav" id="nav">
+        <a href="#inicio">Inicio</a>
+        <a href="#herramientas">Herramientas</a>
+        <a href="#guias">Guías</a>
+        <a href="#ventajas">Ventajas</a>
+      </nav>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="inicio">
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <p class="eyebrow">Gratis · Sin registro · Java &amp; Bedrock</p>
+          <h1>Las mejores herramientas para Minecraft</h1>
+          <p class="hero-lead">
+            Calculadoras, herramientas y guías gratuitas para mejorar tu experiencia en Minecraft.
+          </p>
+          <div class="hero-actions">
+            <a href="#herramientas" class="btn btn-primary">Explorar herramientas</a>
+            <a href="#guias" class="btn btn-ghost">Ver guías</a>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="cube-cluster">
+            <div class="cube cube--back">
+              <div class="face top"></div>
+              <div class="face left"></div>
+              <div class="face right"></div>
+            </div>
+            <div class="cube cube--gold">
+              <div class="face top"></div>
+              <div class="face left"></div>
+              <div class="face right"></div>
+            </div>
+            <div class="cube cube--front">
+              <div class="face top"></div>
+              <div class="face left"></div>
+              <div class="face right"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HERRAMIENTAS ============ -->
+    <section class="section" id="herramientas">
+      <div class="container">
+        <div class="section-head">
+          <h2>Herramientas</h2>
+          <p>Todo lo que necesitas para calcular, planificar y construir más rápido.</p>
+        </div>
+
+        <div class="tools-grid">
+
+          <article class="card tool-card">
+            <div class="tool-icon">🧱</div>
+            <h3>Calculadora de bloques</h3>
+            <p>Convierte entre bloques, stacks y shulker boxes al instante.</p>
+            <button class="btn btn-secondary" data-tool="bloques">Usar herramienta</button>
+          </article>
+
+          <article class="card tool-card">
+            <div class="tool-icon">📦</div>
+            <h3>Calculadora de stacks</h3>
+            <p>Introduce una cantidad de bloques y descubre cuántos stacks completos son.</p>
+            <button class="btn btn-secondary" data-tool="stacks">Usar herramienta</button>
+          </article>
+
+          <article class="card tool-card">
+            <div class="tool-icon">🔥</div>
+            <h3>Calculadora de hornos</h3>
+            <p>Calcula el tiempo y el combustible necesario para fundir tus materiales.</p>
+            <button class="btn btn-secondary" data-tool="hornos">Usar herramienta</button>
+          </article>
+
+          <article class="card tool-card">
+            <div class="tool-icon">⚔️</div>
+            <h3>Generador de comandos</h3>
+            <p>Crea comandos /give listos para pegar en tu mundo o servidor.</p>
+            <button class="btn btn-secondary" data-tool="comandos">Usar herramienta</button>
+          </article>
+
+          <article class="card tool-card">
+            <div class="tool-icon">🏗️</div>
+            <h3>Calculadora de materiales</h3>
+            <p>Estima cuántos bloques necesitas para levantar un muro o una estructura.</p>
+            <button class="btn btn-secondary" data-tool="materiales">Usar herramienta</button>
+          </article>
+
+          <article class="card tool-card tool-card--soon">
+            <div class="tool-icon">🧭</div>
+            <h3>Más herramientas</h3>
+            <p>Estamos preparando nuevas calculadoras. Vuelve pronto para descubrirlas.</p>
+            <span class="btn btn-secondary btn-disabled">Próximamente</span>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GUÍAS ============ -->
+    <section class="section section--alt" id="guias">
+      <div class="container">
+        <div class="section-head">
+          <h2>Guías</h2>
+          <p>Explicaciones claras y directas para avanzar más rápido en el juego.</p>
+        </div>
+
+        <div class="guides-list">
+
+          <details class="guide-item">
+            <summary>
+              <span class="guide-icon">💎</span>
+              <span class="guide-title">Cómo encontrar diamantes</span>
+              <span class="guide-chevron">＋</span>
+            </summary>
+            <div class="guide-body">
+              <p>En las versiones actuales, los diamantes aparecen con más frecuencia entre las capas Y=-64 y Y=16, siendo Y=-59 el punto más rentable. Minar en línea recta (estilo "branch mining") a esa altura y revestir de bloques la zona de lava evita sustos.</p>
+            </div>
+          </details>
+
+          <details class="guide-item">
+            <summary>
+              <span class="guide-icon">🌀</span>
+              <span class="guide-title">Cómo hacer un portal al Nether</span>
+              <span class="guide-chevron">＋</span>
+            </summary>
+            <div class="guide-body">
+              <p>Construye un marco de obsidiana de al menos 4×5 bloques (mínimo interior 2×3) y enciéndelo con un mechero. Necesitarás 10 bloques de obsidiana como mínimo, obtenidos vertiendo agua sobre lava con un pico de diamante o netherite.</p>
+            </div>
+          </details>
+
+          <details class="guide-item">
+            <summary>
+              <span class="guide-icon">🛡️</span>
+              <span class="guide-title">Cómo conseguir Netherite</span>
+              <span class="guide-chevron">＋</span>
+            </summary>
+            <div class="guide-body">
+              <p>Consigue restos antiguos minando en el Nether (funcionan bien las capas Y=8 a Y=22), fúndelos en un horno para obtener lingotes de restos antiguos y combina 4 de ellos con 4 lingotes de oro en una mesa de herrería para crear un lingote de netherite.</p>
+            </div>
+          </details>
+
+          <details class="guide-item">
+            <summary>
+              <span class="guide-icon">🌱</span>
+              <span class="guide-title">Guía para empezar en Minecraft</span>
+              <span class="guide-chevron">＋</span>
+            </summary>
+            <div class="guide-body">
+              <p>Los primeros pasos clave son: talar madera para tus primeras herramientas, conseguir piedra para mejorar el equipo, construir un refugio antes de la primera noche y establecer una fuente de comida estable con un cultivo o animales cercanos.</p>
+            </div>
+          </details>
+
+          <details class="guide-item">
+            <summary>
+              <span class="guide-icon">🏘️</span>
+              <span class="guide-title">Cómo encontrar una aldea</span>
+              <span class="guide-chevron">＋</span>
+            </summary>
+            <div class="guide-body">
+              <p>Explora biomas de llanura, sabana, desierto, taiga o nieve, que son los que generan aldeas. Un mapa de exploración de aldeante (comprado a un cartógrafo) o el uso del comando de localización en un mundo propio acelera mucho la búsqueda.</p>
+            </div>
+          </details>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ VENTAJAS ============ -->
+    <section class="section" id="ventajas">
+      <div class="container">
+        <div class="section-head">
+          <h2>Por qué usar MineTools</h2>
+          <p>Pensado para que juegues más y calcules menos a mano.</p>
+        </div>
+
+        <div class="advantages-grid">
+          <div class="advantage-card">
+            <div class="advantage-icon">🆓</div>
+            <h3>Herramientas gratuitas</h3>
+            <p>Todo el contenido de MineTools es gratis, sin límites ni suscripciones.</p>
+          </div>
+          <div class="advantage-card">
+            <div class="advantage-icon">⚡</div>
+            <h3>Fácil de utilizar</h3>
+            <p>Interfaces simples pensadas para dar una respuesta en segundos.</p>
+          </div>
+          <div class="advantage-card">
+            <div class="advantage-icon">🕹️</div>
+            <h3>Java y Bedrock</h3>
+            <p>Nuestras calculadoras y guías sirven para ambas ediciones del juego.</p>
+          </div>
+          <div class="advantage-card">
+            <div class="advantage-icon">🔜</div>
+            <h3>Siempre creciendo</h3>
+            <p>Añadimos nuevas herramientas y guías de forma constante.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="#inicio" class="logo">
+          <span class="logo-mark" aria-hidden="true"></span>
+          MineTools
+        </a>
+        <p>Herramientas y guías gratuitas para la comunidad de Minecraft.</p>
+      </div>
+
+      <nav class="footer-nav">
+        <a href="#inicio">Inicio</a>
+        <a href="#herramientas">Herramientas</a>
+        <a href="#guias">Guías</a>
+      </nav>
+
+      <p class="footer-disclaimer">
+        MineTools es un proyecto independiente y no oficial. No está afiliado, respaldado ni patrocinado
+        por Mojang Studios o Microsoft. "Minecraft" es una marca registrada de sus respectivos propietarios.
+      </p>
+      <p class="footer-copy">© <span id="year"></span> MineTools. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- ============ MODAL DE HERRAMIENTAS ============ -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
+      <h3 id="modalTitle"></h3>
+      <div id="modalBody"><!-- contenido inyectado dinámicamente --></div>
+    </div>
+  </div>
+
+  <script>
+/* ==========================================================================
+   MINETOOLS — SCRIPT PRINCIPAL
+   Contiene: menú móvil, sistema de modal reutilizable y las 5 calculadoras.
+   ========================================================================== */
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  /* -------------------- Año automático en el footer -------------------- */
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* -------------------- Menú de navegación (móvil) -------------------- */
+  const navToggle = document.getElementById('navToggle');
+  const nav = document.getElementById('nav');
+
+  navToggle.addEventListener('click', () => {
+    const isOpen = nav.classList.toggle('is-open');
+    navToggle.setAttribute('aria-expanded', isOpen);
+  });
+
+  // Cierra el menú móvil al pulsar un enlace
+  nav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('is-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  /* ======================================================================
+     SISTEMA DE MODAL REUTILIZABLE
+     Cada herramienta define: título + HTML del formulario + función init()
+     que engancha los eventos una vez el HTML está insertado en el DOM.
+     ====================================================================== */
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalBody = document.getElementById('modalBody');
+  const modalClose = document.getElementById('modalClose');
+
+  function openModal(tool) {
+    modalTitle.textContent = tool.title;
+    modalBody.innerHTML = tool.html;
+    tool.init();
+    modalOverlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modalOverlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  modalClose.addEventListener('click', closeModal);
+
+  // Cerrar al hacer clic fuera del cuadro del modal
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+  });
+
+  // Cerrar con la tecla Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalOverlay.classList.contains('is-open')) {
+      closeModal();
+    }
+  });
+
+  // Conectar cada botón "Usar herramienta" con su calculadora
+  document.querySelectorAll('[data-tool]').forEach(button => {
+    button.addEventListener('click', () => {
+      const toolName = button.getAttribute('data-tool');
+      const tool = TOOLS[toolName];
+      if (tool) openModal(tool);
+    });
+  });
+
+  /* ======================================================================
+     CONSTANTES DEL JUEGO
+     ====================================================================== */
+  const ITEMS_PER_STACK = 64;      // tamaño de stack estándar en Minecraft
+  const STACKS_PER_SHULKER = 27;   // huecos de una shulker box
+
+  /* ======================================================================
+     HERRAMIENTA 1 — CALCULADORA DE BLOQUES
+     Convierte una cantidad de bloques en stacks + shulker boxes.
+     ====================================================================== */
+  const bloquesTool = {
+    title: 'Calculadora de bloques',
+    html: `
+      <div class="field">
+        <label for="bloquesInput">Cantidad total de bloques</label>
+        <input type="number" id="bloquesInput" min="0" placeholder="Ej: 2500">
+      </div>
+      <button class="btn btn-primary" id="bloquesBtn" style="width:100%">Calcular</button>
+      <div class="tool-result" id="bloquesResult"></div>
+      <p class="tool-hint">1 stack = 64 bloques · 1 shulker box = 27 stacks (1.728 bloques).</p>
+    `,
+    init() {
+      const btn = document.getElementById('bloquesBtn');
+      const input = document.getElementById('bloquesInput');
+      const result = document.getElementById('bloquesResult');
+
+      const calcular = () => {
+        const total = parseInt(input.value, 10);
+        if (isNaN(total) || total < 0) {
+          result.innerHTML = 'Introduce una cantidad de bloques válida.';
+          result.classList.add('is-visible');
+          return;
+        }
+
+        const shulkers = Math.floor(total / (ITEMS_PER_STACK * STACKS_PER_SHULKER));
+        const restoTrasShulkers = total % (ITEMS_PER_STACK * STACKS_PER_SHULKER);
+        const stacks = Math.floor(restoTrasShulkers / ITEMS_PER_STACK);
+        const bloquesSueltos = restoTrasShulkers % ITEMS_PER_STACK;
+
+        result.innerHTML = `
+          <strong>${total.toLocaleString('es-ES')} bloques</strong> equivalen a:<br>
+          ${shulkers} shulker box(es), ${stacks} stack(s) y ${bloquesSueltos} bloque(s) suelto(s).
+        `;
+        result.classList.add('is-visible');
+      };
+
+      btn.addEventListener('click', calcular);
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter') calcular(); });
+    }
+  };
+
+  /* ======================================================================
+     HERRAMIENTA 2 — CALCULADORA DE STACKS
+     Requisito principal: "1000 bloques" -> stacks completos + sobrante.
+     ====================================================================== */
+  const stacksTool = {
+    title: 'Calculadora de stacks',
+    html: `
+      <div class="field">
+        <label for="stacksInput">Cantidad de bloques</label>
+        <input type="number" id="stacksInput" min="0" placeholder="Ej: 1000">
+      </div>
+      <button class="btn btn-primary" id="stacksBtn" style="width:100%">Calcular</button>
+      <div class="tool-result" id="stacksResult"></div>
+      <p class="tool-hint">Se calcula sobre la base de 64 unidades por stack.</p>
+    `,
+    init() {
+      const btn = document.getElementById('stacksBtn');
+      const input = document.getElementById('stacksInput');
+      const result = document.getElementById('stacksResult');
+
+      const calcular = () => {
+        const total = parseInt(input.value, 10);
+        if (isNaN(total) || total < 0) {
+          result.innerHTML = 'Introduce una cantidad de bloques válida.';
+          result.classList.add('is-visible');
+          return;
+        }
+
+        // Lógica principal solicitada: stacks completos + bloques sobrantes
+        const stacksCompletos = Math.floor(total / ITEMS_PER_STACK);
+        const bloquesSobrantes = total % ITEMS_PER_STACK;
+
+        result.innerHTML = `
+          <strong>${total.toLocaleString('es-ES')} bloques</strong> son
+          <strong>${stacksCompletos} stack(s) completos</strong>
+          ${bloquesSobrantes > 0 ? `y sobran <strong>${bloquesSobrantes} bloque(s)</strong>.` : 'exactos, sin sobrante.'}
+        `;
+        result.classList.add('is-visible');
+      };
+
+      btn.addEventListener('click', calcular);
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter') calcular(); });
+    }
+  };
+
+  /* ======================================================================
+     HERRAMIENTA 3 — CALCULADORA DE HORNOS
+     Calcula tiempo total y unidades de combustible necesarias.
+     ====================================================================== */
+  const FUEL_OPTIONS = {
+    carbon:   { label: 'Carbón / Carbón vegetal (1 ítem = 8 usos)', usosPorUnidad: 8 },
+    madera:   { label: 'Bloque de madera (1 ítem = 16 usos)', usosPorUnidad: 16 },
+    lava:     { label: 'Cubo de lava (1 ítem = 100 usos)', usosPorUnidad: 100 },
+    palo:     { label: 'Palos (1 ítem = 0,5 usos)', usosPorUnidad: 0.5 }
+  };
+
+  const hornosTool = {
+    title: 'Calculadora de hornos',
+    html: `
+      <div class="field">
+        <label for="hornosCantidad">Cantidad de ítems a fundir</label>
+        <input type="number" id="hornosCantidad" min="0" placeholder="Ej: 128">
+      </div>
+      <div class="field">
+        <label for="hornosCombustible">Tipo de combustible</label>
+        <select id="hornosCombustible">
+          <option value="carbon">Carbón / Carbón vegetal</option>
+          <option value="madera">Bloque de madera</option>
+          <option value="lava">Cubo de lava</option>
+          <option value="palo">Palos</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="hornosBtn" style="width:100%">Calcular</button>
+      <div class="tool-result" id="hornosResult"></div>
+      <p class="tool-hint">Cada ítem tarda 10 segundos en fundirse en un horno normal.</p>
+    `,
+    init() {
+      const btn = document.getElementById('hornosBtn');
+      const cantidadInput = document.getElementById('hornosCantidad');
+      const combustibleSelect = document.getElementById('hornosCombustible');
+      const result = document.getElementById('hornosResult');
+      const SEGUNDOS_POR_ITEM = 10;
+
+      const calcular = () => {
+        const cantidad = parseInt(cantidadInput.value, 10);
+        if (isNaN(cantidad) || cantidad < 0) {
+          result.innerHTML = 'Introduce una cantidad válida de ítems.';
+          result.classList.add('is-visible');
+          return;
+        }
+
+        const fuel = FUEL_OPTIONS[combustibleSelect.value];
+        const unidadesCombustible = Math.ceil(cantidad / fuel.usosPorUnidad);
+        const segundosTotales = cantidad * SEGUNDOS_POR_ITEM;
+        const minutos = Math.floor(segundosTotales / 60);
+        const segundosRestantes = segundosTotales % 60;
+
+        result.innerHTML = `
+          Fundir <strong>${cantidad}</strong> ítem(s) tardará
+          <strong>${minutos} min ${segundosRestantes} s</strong>.<br>
+          Combustible necesario: <strong>${unidadesCombustible}</strong> — ${fuel.label}.
+        `;
+        result.classList.add('is-visible');
+      };
+
+      btn.addEventListener('click', calcular);
+      cantidadInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') calcular(); });
+    }
+  };
+
+  /* ======================================================================
+     HERRAMIENTA 4 — GENERADOR DE COMANDOS
+     Genera un comando /give listo para copiar.
+     ====================================================================== */
+  const comandosTool = {
+    title: 'Generador de comandos',
+    html: `
+      <div class="field">
+        <label for="cmdJugador">Nombre del jugador</label>
+        <input type="text" id="cmdJugador" placeholder="Ej: Steve">
+      </div>
+      <div class="field">
+        <label for="cmdItem">ID del ítem</label>
+        <input type="text" id="cmdItem" placeholder="Ej: diamond_sword">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="cmdCantidad">Cantidad</label>
+          <input type="number" id="cmdCantidad" min="1" max="64" value="1">
+        </div>
+        <div class="field">
+          <label for="cmdEdicion">Edición</label>
+          <select id="cmdEdicion">
+            <option value="java">Java</option>
+            <option value="bedrock">Bedrock</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="cmdBtn" style="width:100%">Generar comando</button>
+      <div class="tool-result" id="cmdResult"></div>
+    `,
+    init() {
+      const btn = document.getElementById('cmdBtn');
+      const jugadorInput = document.getElementById('cmdJugador');
+      const itemInput = document.getElementById('cmdItem');
+      const cantidadInput = document.getElementById('cmdCantidad');
+      const edicionSelect = document.getElementById('cmdEdicion');
+      const result = document.getElementById('cmdResult');
+
+      const generar = () => {
+        const jugador = jugadorInput.value.trim() || '@p';
+        const item = itemInput.value.trim().toLowerCase().replace(/\s+/g, '_');
+        const cantidad = parseInt(cantidadInput.value, 10) || 1;
+
+        if (!item) {
+          result.innerHTML = 'Escribe el ID del ítem (por ejemplo: diamond_sword).';
+          result.classList.add('is-visible');
+          return;
+        }
+
+        const idFormateado = edicionSelect.value === 'java' ? `minecraft:${item}` : item;
+        const comando = `/give ${jugador} ${idFormateado} ${cantidad}`;
+
+        result.innerHTML = `
+          Comando generado:
+          <code id="cmdOutput">${comando}</code>
+        `;
+        result.classList.add('is-visible');
+      };
+
+      btn.addEventListener('click', generar);
+    }
+  };
+
+  /* ======================================================================
+     HERRAMIENTA 5 — CALCULADORA DE MATERIALES
+     Estima los bloques necesarios para un muro/estructura rectangular,
+     descontando huecos como puertas o ventanas si se indican.
+     ====================================================================== */
+  const materialesTool = {
+    title: 'Calculadora de materiales',
+    html: `
+      <div class="field-row">
+        <div class="field">
+          <label for="matAncho">Ancho (bloques)</label>
+          <input type="number" id="matAncho" min="1" placeholder="Ej: 10">
+        </div>
+        <div class="field">
+          <label for="matAlto">Alto (bloques)</label>
+          <input type="number" id="matAlto" min="1" placeholder="Ej: 5">
+        </div>
+      </div>
+      <div class="field">
+        <label for="matHuecos">Bloques a descontar (puertas, ventanas...)</label>
+        <input type="number" id="matHuecos" min="0" value="0">
+      </div>
+      <button class="btn btn-primary" id="matBtn" style="width:100%">Calcular</button>
+      <div class="tool-result" id="matResult"></div>
+      <p class="tool-hint">Cálculo para una pared de una sola capa de grosor.</p>
+    `,
+    init() {
+      const btn = document.getElementById('matBtn');
+      const anchoInput = document.getElementById('matAncho');
+      const altoInput = document.getElementById('matAlto');
+      const huecosInput = document.getElementById('matHuecos');
+      const result = document.getElementById('matResult');
+
+      const calcular = () => {
+        const ancho = parseInt(anchoInput.value, 10);
+        const alto = parseInt(altoInput.value, 10);
+        const huecos = parseInt(huecosInput.value, 10) || 0;
+
+        if (isNaN(ancho) || isNaN(alto) || ancho <= 0 || alto <= 0) {
+          result.innerHTML = 'Introduce un ancho y un alto válidos.';
+          result.classList.add('is-visible');
+          return;
+        }
+
+        const totalBruto = ancho * alto;
+        const totalNeto = Math.max(totalBruto - huecos, 0);
+        const stacksNecesarios = Math.ceil(totalNeto / ITEMS_PER_STACK);
+
+        result.innerHTML = `
+          Necesitas <strong>${totalNeto.toLocaleString('es-ES')} bloques</strong>
+          para esta pared de ${ancho}×${alto}.<br>
+          Eso equivale a <strong>${stacksNecesarios} stack(s)</strong> (redondeado hacia arriba).
+        `;
+        result.classList.add('is-visible');
+      };
+
+      btn.addEventListener('click', calcular);
+    }
+  };
+
+  /* -------------------- Registro de todas las herramientas -------------------- */
+  const TOOLS = {
+    bloques: bloquesTool,
+    stacks: stacksTool,
+    hornos: hornosTool,
+    comandos: comandosTool,
+    materiales: materialesTool
+  };
+
+});
+
+  </script>
+</body>
+</html>
+```
+
